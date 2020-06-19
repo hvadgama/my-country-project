@@ -1,26 +1,90 @@
+<?php
+
+$host = "localhost";
+$username = "ubuntu";
+$password = "ubuntu";
+$db_name = "location_db";
+
+$conn = mysqli_connect($host, $username, $password, $db_name);
+
+if ($conn->connect_error) {
+  die($conn->connect_error);
+}
+
+if ($_POST) {
+
+  print_r($_POST);
+
+  echo "save data: "  ;
+  $name = $_POST['fname'];
+  $state = $_POST['state'];
+
+  $query = "INSERT INTO city (name, state_id) values ('$name', $state)";
+
+// echo $query;
+  $result = $conn->query($query);
+  
+  if ($result) {
+    // echo 'here';die;
+    header("Location: city_insert.php");
+  }
+  else {
+    print_r($conn->error);
+  }
+
+}
+
+$sql = "SELECT id, name FROM country";
+$result = $conn->query($sql );
+
+if (!$result) {
+  print_r($conn->error);
+}
+  
+?>
 <!DOCTYPE html>
 <html>
 <body>
 
+<script>
+
+  function myfunction(value) {
+    console.log(value);
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          // Typical action to be performed when the document is ready:
+          document.getElementById("state").innerHTML = xhttp.responseText;
+          console.log(xhttp.responseText);
+        }
+    };
+    xhttp.open("GET", "ajax.php?cid=" + value, true);
+    xhttp.send();
+  }
+
+</script>
+
 <h2>City insert:-</h2>
-<form action="/action_page.php">
+<form action="" method="post">
   <label for="country">Choose a country:</label>
-  <select name="state" id="state">
-    <option value="gujarat">india</option>
-    <option value="florida">usa</option>
-    <option value="washinton dc">france</option>
+  <select name="country" id="country" onchange="myfunction(this.value)">
+
+  <option value="">--- select ---</option>
+  <?php while($row = $result->fetch_assoc()) { ?>
+
+    <option value="<?php echo $row['id']?>"><?php echo $row['name']?></option>
+
+  <?php } ?>
+   
   </select>
   <br><br>
 
   <label for="state">Choose a state:</label>
   <select name="state" id="state">
-    <option value="gujarat">gujarat</option>
-    <option value="florida">florida</option>
-    <option value="washinton dc">washinton dc</option>
-    <option value="new york">new york</option>
-    <option value="paris">paris</option>
-    <option value="nice">nice</option>
-    <option value="abc">abc</option>
+  <?php while($row = $result->fetch_assoc()) { ?>
+    <option value="<?php echo $row['id']?>"><?php echo $row['name']?></option>
+  <?php } ?>
   </select>
   <br><br>
   
