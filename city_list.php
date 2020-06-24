@@ -38,7 +38,7 @@ $result = $conn->query($sql);
 
 <table style="width:100%">
   <tr>
-    <th>State</th>
+    <th>City</th>
     <th>Edit</th> 
     <th>Delete</th>
   </tr>
